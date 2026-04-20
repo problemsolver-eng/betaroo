@@ -1,0 +1,15 @@
+export const appImages = {
+  addCircle: require('../../assets/add-circle-line.png'),
+  arrowRight: require('../../assets/arrow-right-s-line.png'),
+  arrowUp: require('../../assets/arrow-up-s-line.png'),
+  draftKing: require('../../assets/draft-king.png'),
+  global: require('../../assets/global-line.png'),
+  info: require('../../assets/information-2-fill.png'),
+  leagues: require('../../assets/leagues-icon.png'),
+  light: require('../../assets/light.png'),
+  player: require('../../assets/player.png'),
+  playerBadge: require('../../assets/team-logo-player-badge.png'),
+  share: require('../../assets/share-2-fill.png'),
+  teamLogoBack: require('../../assets/team-logo.png'),
+  teamLogoFront: require('../../assets/team-logo-state.png'),
+} as const;
