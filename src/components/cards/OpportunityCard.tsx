@@ -1,8 +1,9 @@
 import React from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image, PixelRatio, StyleSheet, Text, View } from 'react-native';
 import { appImages } from '../../assets';
 import { ChanceBadge } from '../atoms/ChanceBadge';
-import { ChanceLevel, colors, radii, spacing, typography } from '../../tokens';
+import { StatPercentagePill } from '../atoms/StatPercentagePill';
+import { ChanceLevel, colors, radii, shadows, spacing, typography } from '../../tokens';
 
 type StatLine = {
   label: string;
@@ -26,6 +27,7 @@ type TeamOpportunityCardProps = OpportunityCardBaseProps & {
 type PlayerOpportunityCardProps = OpportunityCardBaseProps & {
   variant: 'player';
   player: string;
+  position?: string;
 };
 
 export type OpportunityCardProps = TeamOpportunityCardProps | PlayerOpportunityCardProps;
@@ -34,10 +36,11 @@ export function OpportunityCard(props: OpportunityCardProps) {
   return (
     <View style={styles.card}>
       <View style={styles.topRow}>
-        <View style={styles.metaLeft}>
-          <Text style={styles.metaText}>{props.event}</Text>
-          <Text style={styles.metaText}>{props.time}</Text>
-        </View>
+        <Text style={styles.metaText}>
+          {props.event}
+          <Text style={styles.metaDot}> · </Text>
+          {props.time}
+        </Text>
         <View style={styles.metaRight}>
           <Image source={appImages.info} style={styles.iconImage} />
           <Image source={appImages.share} style={styles.iconImage} />
@@ -55,8 +58,17 @@ export function OpportunityCard(props: OpportunityCardProps) {
                 style={styles.avatarSecondary}
               />
             </View>
-            <View>
-              <Text style={styles.title}>{props.player}</Text>
+            <View style={styles.playerBody}>
+              <View style={styles.titleRow}>
+                <Text style={styles.title} numberOfLines={1}>
+                  {props.player}
+                </Text>
+                {props.position ? (
+                  <View style={styles.positionPill}>
+                    <Text style={styles.positionPillText}>{props.position}</Text>
+                  </View>
+                ) : null}
+              </View>
               <Text style={styles.subtitle}>{props.market}</Text>
             </View>
           </View>
@@ -82,7 +94,7 @@ export function OpportunityCard(props: OpportunityCardProps) {
       <View style={styles.bottomRow}>
         {props.stats.map((stat, index) => (
           <View key={stat.label} style={styles.statGroup}>
-            <ChanceBadge level="strong" label={stat.label} rightText={`${stat.value}%`} />
+            <StatPercentagePill label={stat.label} value={stat.value} />
             {index < props.stats.length - 1 ? <View style={styles.statSeparator} /> : null}
           </View>
         ))}
@@ -90,17 +102,23 @@ export function OpportunityCard(props: OpportunityCardProps) {
           <Image source={appImages.draftKing} style={styles.oddsIcon} />
           <Text style={styles.odds}>{props.odds}</Text>
         </View>
-        <Image source={appImages.addCircle} style={styles.trailingIcon} />
+        <View style={styles.addButtonWrap}>
+          <Image source={appImages.addCircle} style={styles.addButtonIcon} />
+        </View>
       </View>
     </View>
   );
 }
 
+/** Figma team cluster: width 57.375, rear circle offset = cluster − diameter (dp, rounded for crisp layout) */
+const TEAM_LOGO_CLUSTER_W = PixelRatio.roundToNearestPixel(57.375);
+const TEAM_LOGO_OFFSET = PixelRatio.roundToNearestPixel(57.375 - 34);
+
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#1C1C1C',
-    borderColor: colors.background.border,
-    borderRadius: 8,
+    backgroundColor: colors.background.base,
+    borderColor: colors.border.subtle,
+    borderRadius: radii.card,
     borderWidth: 1,
     height: 126,
     overflow: 'hidden',
@@ -108,59 +126,61 @@ const styles = StyleSheet.create({
   },
   topRow: {
     alignItems: 'center',
-    borderBottomColor: '#202020',
+    borderBottomColor: colors.border.dark,
     borderBottomWidth: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     minHeight: 26,
-    paddingBottom: 6,
-    paddingLeft: 12,
-    paddingRight: 8,
-    paddingTop: 6,
-  },
-  metaLeft: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: spacing.sm,
+    paddingBottom: spacing.g6,
+    paddingLeft: spacing.md,
+    paddingRight: spacing.sm,
+    paddingTop: spacing.g6,
   },
   metaRight: {
     alignItems: 'center',
     flexDirection: 'row',
-    gap: spacing.xs + 1,
+    gap: spacing.g6,
   },
   metaText: {
     ...typography.overline,
     color: colors.text.muted,
     fontSize: 10,
+    includeFontPadding: false,
     letterSpacing: 0.2,
+    lineHeight: 14,
     opacity: 0.8,
+    flex: 1,
+    marginRight: spacing.sm,
+  },
+  metaDot: {
+    opacity: 1,
   },
   iconImage: {
-    height: 16,
+    height: 14,
     opacity: 0.84,
-    width: 16,
+    width: 14,
   },
   centerRow: {
     alignItems: 'center',
     flexDirection: 'row',
-    gap: 14,
+    gap: spacing.g14,
     height: 64,
     justifyContent: 'space-between',
-    padding: 12,
+    padding: spacing.md,
   },
   teamCenterWrap: {
     alignItems: 'center',
     flex: 1,
     flexDirection: 'row',
-    gap: spacing.xs + 2,
+    gap: spacing.sm,
   },
   teamLogos: {
-    width: 52,
+    width: TEAM_LOGO_CLUSTER_W,
   },
   teamLogosWrap: {
     height: 34,
     position: 'relative',
-    width: 52,
+    width: TEAM_LOGO_CLUSTER_W,
   },
   logoPrimary: {
     borderRadius: radii.pill,
@@ -185,17 +205,19 @@ const styles = StyleSheet.create({
   logoSecondary: {
     borderRadius: radii.pill,
     height: 34,
-    left: 14,
+    left: TEAM_LOGO_OFFSET,
+    opacity: 0.92,
     position: 'absolute',
     top: 0,
     width: 34,
+    zIndex: 0,
   },
+  /** Darken rear mark so it reads behind the front logo (blend ≈ design “muted” pass) */
   logoSecondaryOverlay: {
-    backgroundColor: '#000000',
+    backgroundColor: 'rgba(0, 0, 0, 0.44)',
     borderRadius: radii.pill,
     height: 34,
-    left: 14,
-    opacity: 0.2,
+    left: TEAM_LOGO_OFFSET,
     position: 'absolute',
     top: 0,
     width: 34,
@@ -203,11 +225,39 @@ const styles = StyleSheet.create({
   },
   playerBlock: {
     alignItems: 'center',
+    flex: 1,
     flexDirection: 'row',
-    gap: spacing.xs + 2,
+    gap: spacing.sm,
+    minWidth: 0,
+  },
+  playerBody: {
+    flex: 1,
+    gap: spacing.xxs,
+    minWidth: 0,
+  },
+  titleRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: spacing.sm,
+    minHeight: 20,
+  },
+  positionPill: {
+    backgroundColor: colors.background.secondary,
+    borderRadius: radii.badge,
+    paddingHorizontal: spacing.xs,
+    paddingVertical: 2,
+  },
+  positionPillText: {
+    color: colors.text.muted,
+    fontSize: 10,
+    fontWeight: '500',
+    includeFontPadding: false,
+    lineHeight: 12,
   },
   avatarWrap: {
+    alignItems: 'center',
     height: 44,
+    justifyContent: 'center',
     position: 'relative',
     width: 44,
   },
@@ -217,44 +267,47 @@ const styles = StyleSheet.create({
     width: 40,
   },
   avatarSecondary: {
-    borderColor: '#1C1C1C',
+    borderColor: colors.background.base,
     borderRadius: radii.pill,
     borderWidth: 1,
-    bottom: -2,
+    bottom: -1,
     height: 20,
     position: 'absolute',
-    right: -2,
+    right: -1,
     width: 20,
   },
   content: {
     flex: 1,
-    gap: spacing.xs - 1,
+    gap: spacing.xxs,
   },
   title: {
-    ...typography.titleSm,
+    ...typography.titleMd,
     color: colors.text.primary,
+    flexShrink: 1,
+    includeFontPadding: false,
   },
   subtitle: {
-    ...typography.bodySm,
-    color: colors.text.secondary,
+    ...typography.bodyMd,
+    color: colors.text.tertiary,
+    includeFontPadding: false,
   },
   bottomRow: {
     alignItems: 'center',
-    borderTopColor: '#202020',
+    borderTopColor: colors.border.dark,
     borderTopWidth: 1,
     flexDirection: 'row',
     gap: spacing.xs,
     height: 36,
     justifyContent: 'space-between',
-    paddingBottom: 8,
-    paddingLeft: 12,
-    paddingRight: 12,
-    paddingTop: 8,
+    paddingBottom: spacing.sm,
+    paddingLeft: spacing.md,
+    paddingRight: spacing.md,
+    paddingTop: spacing.sm,
   },
   statGroup: {
     alignItems: 'center',
     flexDirection: 'row',
-    gap: spacing.xs,
+    gap: spacing.g6,
   },
   statSeparator: {
     backgroundColor: colors.background.border,
@@ -265,8 +318,8 @@ const styles = StyleSheet.create({
   },
   oddsChip: {
     alignItems: 'center',
-    backgroundColor: '#262626',
-    borderRadius: 5,
+    backgroundColor: colors.background.secondary,
+    borderRadius: radii.odds,
     flexDirection: 'row',
     gap: 2,
     height: 20,
@@ -284,10 +337,23 @@ const styles = StyleSheet.create({
     ...typography.bodySm,
     color: colors.text.primary,
     fontWeight: '700',
+    includeFontPadding: false,
   },
-  trailingIcon: {
+  addButtonWrap: {
+    alignItems: 'center',
+    backgroundColor: colors.background.secondary,
+    borderRadius: radii.actionIcon,
+    gap: spacing.xxs,
     height: 20,
+    justifyContent: 'center',
     marginLeft: spacing.xs,
+    padding: spacing.xxs,
     width: 20,
+    ...shadows.ambientLift,
+    elevation: 2,
+  },
+  addButtonIcon: {
+    height: 16,
+    width: 16,
   },
 });

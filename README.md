@@ -1,24 +1,37 @@
-# Betaroo React Native Developer Test
+# Betaroo — React Native developer test
 
-This project implements all 3 parts of the Betaroo React Native test task using React Native + TypeScript (CLI, no Expo).
+A small React Native (CLI) + TypeScript app that covers the three parts of the Betaroo take-home: opportunity cards, a preferred-leagues select, and a token layer. No Expo, no extra UI kit for the core components.
 
-Figma: [Developer Test](https://www.figma.com/design/UqWypmTyOe0zAfNCLPpfkk/Developer-Test?node-id=0-1&p=f)
+**Design** · [Figma — Developer Test](https://www.figma.com/design/UqWypmTyOe0zAfNCLPpfkk/Developer-Test?node-id=0-1&p=f)
 
-[Demo recording](https://res.cloudinary.com/dito8ufxy/video/upload/v1776719245/Screen_Recording_2026-04-20_at_23.19.34_nofmmh.mp4)
+**Demo** 
+<video src="https://github.com/user-attachments/assets/61f17f45-6e14-49ec-a8a5-f6107acc4b36" controls width="700"></video>
 
-[Open MP4 on GitHub](https://github.com/problemsolver-eng/betaroo/blob/main/assets/Screen%20Recording%202026-04-20%20at%2023.19.34.mp4)
+---
 
-## Tech + Constraints
+## What I updated
 
-- React Native CLI
-- TypeScript
-- Functional components + hooks
-- Styling via `StyleSheet.create`
-- No external UI libraries for core components
+- **Tokens** — Shared the soft “lift” shadow (`shadows.ambientLift`) and the odds-pill radius (`radii.odds`) so cards and inputs don’t drift.
+- **Preferred Leagues** — Dropped stray hexes in favor of the same semantic colors and shadow as everywhere else.
+- **Opportunity card** — Tighter layout: team-logo overlap rounded in dp, `includeFontPadding: false` where it matters on Android, explicit line heights on headings.
+- **`StatPercentagePill`** — L5 (or any label) + % in one row; the percent maps to a chance band and drives `ChanceBadge`, with tabular numbers on the value for a clean footer.
+- **Test screen** — One scroll shows the interactive select plus default, focus, and filled previews, so you aren’t toggling props to review states.
+- **This doc** — Synced with the code; visual parity with Figma is always a product discussion, not something the README can sign off on by itself.
 
-## How To Run (iOS)
+---
 
-From project root:
+## Stack
+
+| | |
+| --- | --- |
+| **Runtime** | React Native CLI, TypeScript |
+| **UI** | Functional components, hooks, `StyleSheet` only (no third-party component library for the test UI) |
+
+---
+
+## Run it (iOS)
+
+From the project root:
 
 ```bash
 npm install
@@ -26,68 +39,55 @@ bundle install
 cd ios && bundle exec pod install && cd ..
 ```
 
-Start Metro:
+Metro (terminal 1):
 
 ```bash
 npm start
 ```
 
-Run app (new terminal):
+App (terminal 2):
 
 ```bash
 npm run ios
 ```
 
-## Requirement Mapping
+---
 
-### Part 1 - Opportunity Cards + Atoms
+## What’s implemented
 
-- Implemented as reusable components:
-  - `src/components/cards/OpportunityCard.tsx` (`variant: 'player' | 'team'`)
-  - `src/components/atoms/ChanceBadge.tsx`
-- Rendered with mock data in scroll list:
-  - `src/screens/TestTaskScreen.tsx`
-  - `src/data/mock.ts`
-- Card layout follows Top / Center / Bottom structure and uses provided assets/icons.
+**1 — Opportunity cards & atoms**  
+`OpportunityCard` handles player vs team with a `variant` prop. Layout is top / center / bottom, with shared assets. Mock data and the screen live in `src/data/mock.ts` and `src/screens/TestTaskScreen.tsx`. Atoms: `ChanceBadge` (tiers) and `StatPercentagePill` (label + %, composed with `ChanceBadge`).
 
-### Part 2 - Preferred Leagues Select
+**2 — Preferred Leagues**  
+`PreferredLeaguesSelect` covers empty, open (focus), and filled, with open/close animation and a scrollable list. The test screen stacks the real control and static previews of each state.
 
-- Component:
-  - `src/components/select/PreferredLeaguesSelect.tsx`
-- Supports all required states:
-  - Default (empty)
-  - Focus (dropdown open)
-  - Filled (selections made)
-- Includes open/close and selection transitions, dropdown item extraction, and asset-driven icons.
+**3 — Tokens**  
+Primitives under `src/tokens/primitives/`, semantics under `src/tokens/semantic/` (colors, spacing, radii, typography, shadows), plus `src/tokens/types.ts` and a single `src/tokens/index.ts` export. Components read semantic tokens, not raw palette soup.
 
-### Part 3 - Token Refactor
+---
 
-- Token architecture:
-  - `src/tokens/primitives.ts` (base scales)
-  - `src/tokens/semantic.ts` (semantic aliases for UI usage)
-  - `src/tokens/types.ts` (shared token-driven types)
-  - `src/tokens/index.ts` (single export surface)
-- Components consume semantic tokens and shared token types for consistency and maintainability.
+## Project layout
 
-## Project Structure
+| Path | Role |
+| --- | --- |
+| `src/assets` | Central image / font references |
+| `src/components` | Atoms, cards, select |
+| `src/data` | Types and fixtures |
+| `src/screens` | `TestTaskScreen` and composition |
+| `src/tokens` | Primitives, semantics, shared types |
 
-- `src/assets` - centralized app asset references
-- `src/components` - reusable UI components (atoms/cards/select)
-- `src/data` - typed mock data models + fixtures
-- `src/screens` - screen-level composition
-- `src/tokens` - design tokens (primitives/semantic/types)
+---
 
-## Key Decisions
+## How I approached it
 
-- Unified team/player cards into one professional reusable component with variant props (`OpportunityCard`) to reduce duplication and keep shared layout logic in one place.
-- Kept a single badge atom (`ChanceBadge`) reusable for both confidence chips and stat label-value usage via props (`label`, `rightText`).
-- Centralized image imports in `src/assets/index.ts` to avoid scattered `require(...)` calls and make asset swaps safer.
+One card component for both variants keeps layout and behavior in one place. `ChanceBadge` owns tier styling; `StatPercentagePill` adds the % and tier math. Images go through `src/assets/index.ts` so swapping assets stays boring and safe. Tokens are split so scale tweaks don’t require hunting through components.
 
-## What I Would Improve With More Time
+---
 
-- Write unit tests for token usage and select state transitions.
-- Implement more than pixel-perfect UI design.
-- Add more reliable component parameters for further reusability.
-- Introduce additional eye-catching animations.
-- Create a data repository and models for efficient large data management within the app.
-- Optimize components to be reusable and adaptable for different roles and usage frequencies.
+## If I had more time
+
+- Tests around tokens and select behavior  
+- Real product flows past the demo screen  
+- Richer component APIs for reuse  
+- A few more intentional motion details  
+- Real data layer and models when the app grows past mocks  

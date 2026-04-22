@@ -9,7 +9,7 @@ import {
   ViewStyle,
 } from 'react-native';
 import { appImages } from '../../assets';
-import { ChanceLevel, colors, typography } from '../../tokens';
+import { ChanceLevel, colors, radii, spacing, typography } from '../../tokens';
 
 type ChanceBadgeProps = {
   level: ChanceLevel;
@@ -47,20 +47,24 @@ const styles = StyleSheet.create({
   row: {
     alignItems: 'center',
     flexDirection: 'row',
+    gap: spacing.xs,
+    justifyContent: 'center',
+    minHeight: 18,
   },
   container: {
     alignItems: 'center',
-    borderRadius: 4,
+    alignSelf: 'center',
+    borderRadius: radii.badge,
     height: 18,
     justifyContent: 'center',
     overflow: 'hidden',
-    paddingHorizontal: 4,
+    paddingHorizontal: spacing.xs,
     paddingVertical: 0,
     position: 'relative',
   },
   eliteLightWrap: {
     ...StyleSheet.absoluteFill,
-    opacity: 0.28,
+    opacity: 0.5,
   },
   eliteLight: {
     height: 26,
@@ -70,12 +74,10 @@ const styles = StyleSheet.create({
     width: 52,
   },
   label: {
+    ...typography.chanceBadge,
+    color: colors.text.primary,
     fontFamily: 'DMMono-Medium',
-    fontSize: 12,
     includeFontPadding: false,
-    letterSpacing: 0.24,
-    lineHeight: 12,
-    color: '#FFFFFF',
     textAlign: 'center',
     textAlignVertical: 'center',
     zIndex: 1,
@@ -83,52 +85,50 @@ const styles = StyleSheet.create({
   },
   rightText: {
     ...typography.bodySm,
-    color: '#FFFFFF',
-    fontFamily: 'System',
-    fontSize: 12,
+    color: colors.text.primary,
     fontVariant: ['lining-nums', 'tabular-nums'],
-    fontWeight: '400',
-    letterSpacing: 0,
-    lineHeight: 16,
-    marginLeft: 4,
+    fontWeight: typography.bodySm.fontWeight,
+    includeFontPadding: false,
+    lineHeight: 18,
+    textAlignVertical: 'center',
   },
 });
 
 const toneStyles: Record<ChanceLevel, { container: ViewStyle; label: TextStyle }> = {
   elite: {
     container: {
-      backgroundColor: '#CD3158',
+      backgroundColor: colors.chance.elite.background,
       shadowColor: colors.chance.elite.glow,
       shadowOpacity: 0.35,
       shadowOffset: { width: 0, height: 2 },
       shadowRadius: 5,
     },
     label: {
-      color: '#FFFFFF',
+      color: colors.chance.elite.text,
     },
   },
   strong: {
     container: {
-      backgroundColor: '#1FC16B1A',
+      backgroundColor: colors.chance.strong.background,
     },
     label: {
-      color: '#35F0A1',
+      color: colors.chance.strong.text,
     },
   },
   fair: {
     container: {
-      backgroundColor: '#FBC64B29',
+      backgroundColor: colors.chance.fair.background,
     },
     label: {
-      color: '#FFD166',
+      color: colors.chance.fair.text,
     },
   },
   risky: {
     container: {
-      backgroundColor: '#FB374829',
+      backgroundColor: colors.chance.risky.background,
     },
     label: {
-      color: '#FF6B77',
+      color: colors.chance.risky.text,
     },
   },
 };

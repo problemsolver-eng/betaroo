@@ -1,9 +1,14 @@
 import React from 'react';
 import { FlatList, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { ChanceBadge, OpportunityCard, PreferredLeaguesSelect } from '../components';
+import {
+  ChanceBadge,
+  OpportunityCard,
+  PreferredLeaguesSelect,
+  StatPercentagePill,
+} from '../components';
 import { PlayerOpportunity, TeamOpportunity } from '../data/types';
 import { playerCards, preferredLeagueOptions, teamCards } from '../data/mock';
-import { colors, spacing, typography } from '../tokens';
+import { colors, radii, spacing, typography } from '../tokens';
 
 export function TestTaskScreen() {
   return (
@@ -22,6 +27,7 @@ export function TestTaskScreen() {
               event={item.event}
               time={item.time}
               player={item.player}
+              position={item.position}
               market={item.market}
               chance={item.chance}
               stats={item.stats}
@@ -42,24 +48,33 @@ export function TestTaskScreen() {
         }
       />
 
-      <Text style={styles.title}>Atom / Chance Badge</Text>
-      <View style={[styles.atomBox, styles.chanceAtomBox]}>
-        <ChanceBadge level="elite" />
-        <ChanceBadge level="strong" />
-        <ChanceBadge level="fair" />
-        <ChanceBadge level="risky" />
+      <Text style={styles.atomHeading}>{'Atom / Chance Badge'}</Text>
+      <View style={styles.atomPanel}>
+        <View style={styles.atomColumn}>
+          <ChanceBadge level="elite" />
+          <ChanceBadge level="strong" />
+          <ChanceBadge level="fair" />
+          <ChanceBadge level="risky" />
+        </View>
       </View>
 
-      <Text style={styles.title}>Atom / Stat %</Text>
-      <View style={[styles.atomBox, styles.statAtomBox]}>
-        <ChanceBadge level="elite" label="L5" rightText="99%" />
-        <ChanceBadge level="strong" label="L5" rightText="85%" />
-        <ChanceBadge level="fair" label="L5" rightText="45%" />
-        <ChanceBadge level="risky" label="L5" rightText="15%" />
+      <Text style={styles.atomHeading}>{'Atom / Stat %'}</Text>
+      <View style={styles.atomPanel}>
+        <View style={styles.atomColumn}>
+          <StatPercentagePill label="L5" value={99} />
+          <StatPercentagePill label="L5" value={85} />
+          <StatPercentagePill label="L5" value={45} />
+          <StatPercentagePill label="L5" value={15} />
+        </View>
       </View>
 
       <Text style={styles.title}>Preferred Leagues Select</Text>
-      <PreferredLeaguesSelect options={preferredLeagueOptions} />
+      <View style={styles.selectStack}>
+        <PreferredLeaguesSelect options={preferredLeagueOptions} mode="default" />
+        <PreferredLeaguesSelect options={preferredLeagueOptions} mode="focus" />
+        <PreferredLeaguesSelect options={preferredLeagueOptions} mode="filled" filledCount={3} />
+        <PreferredLeaguesSelect options={preferredLeagueOptions} />
+      </View>
     </ScrollView>
   );
 }
@@ -78,28 +93,39 @@ const styles = StyleSheet.create({
   title: {
     ...typography.titleMd,
     color: colors.text.primary,
+    includeFontPadding: false,
     marginBottom: spacing.md,
   },
   cardList: {
     gap: spacing.sm,
   },
-  atomBox: {
-    backgroundColor: '#171717',
-    borderColor: '#FFFFFF1A',
-    borderRadius: 12,
+  /**
+   * Atom demo: #262626 panel; badge group centered H+V in the panel; badges
+   * start-aligned inside the group column.
+   */
+  atomHeading: {
+    ...typography.titleSm,
+    color: colors.text.primary,
+    includeFontPadding: false,
+    marginBottom: spacing.sm,
+  },
+  atomPanel: {
+    alignItems: 'center',
+    alignSelf: 'stretch',
+    backgroundColor: colors.background.secondary,
+    borderColor: colors.border.subtle,
+    borderRadius: radii.atomFrame,
     borderWidth: 1,
-    gap: spacing.lg + 2,
-    paddingVertical: spacing.lg,
+    justifyContent: 'center',
+    minHeight: 320,
+    paddingVertical: spacing.xl,
     paddingHorizontal: spacing.xl,
   },
-  chanceAtomBox: {
-    backgroundColor: '#171717',
-    borderColor: '#FFFFFF1A',
-    borderWidth: 1,
+  atomColumn: {
+    alignItems: 'flex-start',
+    gap: spacing.lg + 2,
   },
-  statAtomBox: {
-    backgroundColor: '#171717',
-    borderColor: '#FFFFFF1A',
-    borderWidth: 1,
+  selectStack: {
+    gap: spacing.md,
   },
 });

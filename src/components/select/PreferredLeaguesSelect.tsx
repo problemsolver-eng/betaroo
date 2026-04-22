@@ -10,7 +10,7 @@ import {
   View,
 } from 'react-native';
 import { appImages } from '../../assets';
-import { colors, radii, spacing, typography } from '../../tokens';
+import { colors, radii, shadows, spacing, typography } from '../../tokens';
 
 type PreferredLeaguesSelectProps = {
   options: string[];
@@ -199,12 +199,13 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   caption: {
-    fontSize: 12,
+    ...typography.bodySm,
+    color: colors.text.muted,
     fontVariant: ['lining-nums', 'tabular-nums'],
     fontWeight: '500',
+    includeFontPadding: false,
     letterSpacing: -0.1,
     lineHeight: 16,
-    color: colors.text.muted,
     marginBottom: spacing.xs + 2,
     opacity: 0.92,
   },
@@ -213,17 +214,14 @@ const styles = StyleSheet.create({
   },
   input: {
     alignItems: 'center',
-    backgroundColor: '#171717',
-    borderColor: '#262626',
+    backgroundColor: colors.background.base,
+    borderColor: colors.background.secondary,
     borderRadius: radii.input,
     borderWidth: 1,
     flexDirection: 'row',
     minHeight: 36,
     paddingHorizontal: spacing.sm + 2,
-    shadowColor: '#0A0D14',
-    shadowOpacity: 0.0314,
-    shadowOffset: { width: 0, height: 1 },
-    shadowRadius: 2,
+    ...shadows.ambientLift,
   },
   inputFocused: {
     borderColor: colors.text.primary,
@@ -242,6 +240,7 @@ const styles = StyleSheet.create({
     ...typography.bodySm,
     color: colors.text.primary,
     flex: 1,
+    includeFontPadding: false,
   },
   placeholder: {
     color: colors.text.secondary,
@@ -255,15 +254,12 @@ const styles = StyleSheet.create({
     transform: [{ rotate: '180deg' }],
   },
   dropdown: {
-    backgroundColor: '#171717',
-    borderColor: '#262626',
-    borderRadius: 8,
+    backgroundColor: colors.background.base,
+    borderColor: colors.background.secondary,
+    borderRadius: radii.cardSm,
     overflow: 'hidden',
     width: '100%',
-    shadowColor: '#0A0D14',
-    shadowOpacity: 0.0314,
-    shadowOffset: { width: 0, height: 1 },
-    shadowRadius: 2,
+    ...shadows.ambientLift,
   },
   dropdownOpen: {
     borderWidth: 1,
@@ -278,16 +274,16 @@ const styles = StyleSheet.create({
   option: {
     width: '100%',
     alignItems: 'center',
-    backgroundColor: '#171717',
-    borderRadius: 8,
+    backgroundColor: colors.background.base,
+    borderRadius: radii.cardSm,
     flexDirection: 'row',
-    gap: 8,
+    gap: spacing.sm,
     height: 36,
-    paddingHorizontal: 8,
+    paddingHorizontal: spacing.sm,
   },
   optionActive: {
-    backgroundColor: '#1C1C1C',
-    borderRadius: 6,
+    backgroundColor: colors.background.primary,
+    borderRadius: radii.actionIcon,
     width: '100%',
   },
   optionGlyphIcon: {
@@ -299,6 +295,7 @@ const styles = StyleSheet.create({
   optionText: {
     ...typography.bodySm,
     color: colors.text.secondary,
+    includeFontPadding: false,
   },
   optionTextActive: {
     color: colors.text.primary,

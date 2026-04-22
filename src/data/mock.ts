@@ -3,7 +3,7 @@ import { PlayerOpportunity, TeamOpportunity } from './types';
 export const teamCards: TeamOpportunity[] = [
   {
     id: 't-2',
-    event: 'OKC @ CHT',
+    event: 'OKC @ CHI',
     time: 'FRI 10AM',
     team: 'Oklahoma City Thunder',
     market: 'Moneyline',
@@ -23,6 +23,7 @@ export const playerCards: PlayerOpportunity[] = [
     event: 'CEL @ GSW',
     time: 'FRI 10AM',
     player: 'Derrick White',
+    position: 'SG',
     market: '+6 Assists',
     chance: 'strong' as const,
     stats: [

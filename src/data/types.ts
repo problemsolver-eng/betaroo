@@ -21,6 +21,8 @@ export type PlayerOpportunity = {
   event: string;
   time: string;
   player: string;
+  /** Position abbreviation (e.g. SG), shown as pill next to name */
+  position?: string;
   market: string;
   chance: ChanceLevel;
   stats: OpportunityStat[];

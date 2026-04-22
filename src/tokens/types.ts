@@ -1,3 +1,3 @@
-import { colors } from './semantic';
+import { chanceLevels } from './constants';
 
-export type ChanceLevel = keyof typeof colors.chance;
+export type ChanceLevel = (typeof chanceLevels)[number];
