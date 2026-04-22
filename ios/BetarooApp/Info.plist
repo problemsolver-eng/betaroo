@@ -24,6 +24,15 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>DMMono-Italic.ttf</string>
+		<string>DMMono-Light.ttf</string>
+		<string>DMMono-LightItalic.ttf</string>
+		<string>DMMono-Medium.ttf</string>
+		<string>DMMono-MediumItalic.ttf</string>
+		<string>DMMono-Regular.ttf</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>

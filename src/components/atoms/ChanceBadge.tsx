@@ -70,9 +70,8 @@ const styles = StyleSheet.create({
     width: 52,
   },
   label: {
-    fontFamily: 'DM Mono',
+    fontFamily: 'DMMono-Medium',
     fontSize: 12,
-    fontWeight: '500',
     includeFontPadding: false,
     letterSpacing: 0.24,
     lineHeight: 12,
